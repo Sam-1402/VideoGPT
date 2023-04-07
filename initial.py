@@ -6,7 +6,7 @@ import openai
 import requests
 from moviepy.editor import*
 
-#hello to git
+
 openai.api_key = "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"
 keyword = str(input("Enter the keyword you want to search for: "))
 prompt1= "write a script for youtube video for explaining "+ keyword +" in 140 words"
@@ -21,21 +21,26 @@ response = openai.Completion.create(
 )
 
 
-# with open('generated_text.txt', 'w') as f:
-#     f.write(whole_paragraph)
-# with open('generated_text.txt', 'r') as f:
-#     text = f.read()
+whole_paragraph = response.choices[0].text
+paragraph = re.split[r[""",."""], whole_paragraph]
 engine = pyttsx3.init()
 engine.setProperty('rate', 140)
-  # txt_clip = TextClip(para, fontsize = 15, color = 'red')
-  # txt_clip = txt_clip.set_pos('center').set_duration(speech.duration)
-  # fin_txt_clip = concatenate_videoclips([fin_txt_clip, txt_clip]) 
+fin_txt_clip = TextClip(" ", fontsize = 15, color = 'red')
+fin_txt_clip = fin_txt_clip.set_duration(0.5)
+length_sec = 0
+j=0
+for para in paragraph[:-1]:
+  engine.save_to_file(para, 'E://Python_pr/speech/speech{j}.mp3')
+  speech = AudioFileClip("E://Python_pr/speech/speech{j}.mp3")
+  j = j+1
+  length_sec = length_sec + speech.duration
+  txt_clip = TextClip(para, fontsize = 15, color = 'red')
+  txt_clip = txt_clip.set_pos('center').set_duration(speech.duration)
+  fin_txt_clip = concatenate_videoclips([fin_txt_clip, txt_clip]) 
 
 speak = response.choices[0].text
 engine.save_to_file(speak, 'E://Python_pr/speech/speech.mp3')
-engine.runAndWait()
-speech = AudioFileClip("E://Python_pr/speech/speech.mp3")
-length_sec = speech.duration
+
 
 print(length_sec)
 
@@ -90,6 +95,8 @@ elif(i==5):
   clip5 = VideoFileClip(vname[4]+".mp4")
   full_len_video = concatenate_videoclips([clip1, clip2, clip3, clip4, clip5])
 
-final_clip = full_len_video.subclip(1, length_sec+2)
-final_clip_withaudio = final_clip.set_audio(speech)
-final_clip_withaudio.write_videofile("new.mp4", fps=60)
+final_clip = full_len_video.subclip(1, length_sec+1)
+audioclip = AudioFileClip("E://Python_pr/speech/speech.mp3")
+final_clip_withaudio = final_clip.set_audio(audioclip)
+final_clip = CompositeVideoClip([fin_txt_clip, final_clip_withaudio])
+final_clip.write_videofile("new.mp4", fps=60)
