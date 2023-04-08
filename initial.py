@@ -7,7 +7,7 @@ import requests
 from moviepy.editor import*
 
 
-openai.api_key = "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"
+openai.api_key = "Your API Key"
 keyword = str(input("Enter the keyword you want to search for: "))
 prompt1= "write a script for youtube video for explaining "+ keyword +" in 140 words"
 response = openai.Completion.create(
